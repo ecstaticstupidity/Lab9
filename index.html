@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src = "script.js"></script>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+
   <title>Lab 9</title>
 
   <style>
@@ -44,8 +47,8 @@
   <section id="error-btns">
     <button>Console Log Demo</button>
     <button>Console Error Demo</button>
-    <button>Console Dir</button>
-    <button>Console dirxml</button>
+    <button id = 'Console dir button'>Console Dir</button>
+    <button id = 'Console dirxml button'>Console dirxml</button>
     <button>Console Group Start</button>
     <button>Console Group End</button>
     <button>Console Table</button>
@@ -56,11 +59,35 @@
   </section>
 
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "b5697ced25ed4743b8e04027e69b9fec"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+    TrackJS.track('Testing TrackJS!');
+    class NoNumberError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'NoNumberError'
+      }
+    }
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
+      try {
+        if(firstNum === '') {
+        throw new NoNumberError;
+        }
+      if(secondNum === '') {
+        throw new NoNumberError;
+        }
+      } catch(err) {
+        if(err instanceof NoNumberError) {
+          alert("Make sure to put in a number");
+          alert(err.name);
+        }
+      }
       let operator = document.querySelector('#operator').value;
       output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
     });
